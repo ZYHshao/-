@@ -123,16 +123,16 @@ static CDBufferManager *bufferManager = nil;
 
 #pragma mark SimpleAudioEngine - sound effects
 
--(ALuint) playEffect:(NSString*) filePath
+-(ALuint) playEffect:(NSString*) filePath loop:(Boolean)l gain:(CGFloat)g
 {
-	return [self playEffect:filePath pitch:1.0f pan:0.0f gain:1.0f];
+	return [self playEffect:filePath pitch:1.0f pan:0.0f gain:g loop:l];
 }
 
--(ALuint) playEffect:(NSString*) filePath pitch:(Float32) pitch pan:(Float32) pan gain:(Float32) gain
+-(ALuint) playEffect:(NSString*) filePath pitch:(Float32) pitch pan:(Float32) pan gain:(Float32) gain loop:(Boolean)l
 {
 	int soundId = [bufferManager bufferForFile:filePath create:YES];
 	if (soundId != kCDNoBuffer) {
-		return [soundEngine playSound:soundId sourceGroupId:0 pitch:pitch pan:pan gain:gain loop:false];
+		return [soundEngine playSound:soundId sourceGroupId:0 pitch:pitch pan:pan gain:gain loop:l];
 	} else {
 		return CD_MUTE;
 	}

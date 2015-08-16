@@ -8,7 +8,7 @@
 
 
 #import <GameKit/GameKit.h>
-
+#import "LeftLayer.h"
 // When you import this file, you import all the cocos2d classes
 #import "cocos2d.h"
 
@@ -19,5 +19,6 @@
 
 // returns a CCScene that contains the HelloWorldLayer as the only child
 +(CCScene *) scene;
-
+@property(nonatomic,retain)LeftLayer * left;
+@property(nonatomic,retain)CCLayer * main;
 @end

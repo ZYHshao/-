@@ -4,11 +4,14 @@
 //
 //  Created by 大脚a on 14-12-8.
 //  Copyright DJ_ZYH 2014年. All rights reserved.
-//
+/*
+ 这个界面是游戏的主界面，控制切换
+ */
 
 
 // Import the interfaces
 #import "HelloWorldLayer.h"
+#import "GameLayer.h"
 
 // Needed to obtain the Navigation Controller
 #import "AppDelegate.h"
@@ -37,82 +40,44 @@
 // on "init" you need to initialize your instance
 -(id) init
 {
+//    NSArray * familyName = [UIFont familyNames];
+//    for (NSString * name in familyName) {
+//        printf("Family:%s\n",[name UTF8String]);
+//        NSArray * font = [UIFont fontNamesForFamilyName:name];
+//        for (NSString * fontName  in font) {
+//            printf("\tfont:%s\n",[fontName UTF8String]);
+//        }
+//    }
 	// always call "super" init
 	// Apple recommends to re-assign "self" with the "super's" return value
 	if( (self=[super init]) ) {
-		
-		// create and initialize a Label
-		CCLabelTTF *label = [CCLabelTTF labelWithString:@"Hello World" fontName:@"Marker Felt" fontSize:64];
-
-		// ask director for the window size
-		CGSize size = [[CCDirector sharedDirector] winSize];
-	
-		// position the label on the center of the screen
-		label.position =  ccp( size.width /2 , size.height/2 );
-		
-		// add the label as a child to this Layer
-		[self addChild: label];
-		
-		
-		
-		//
-		// Leaderboards and Achievements
-		//
-		
-		// Default font size will be 28 points.
-		[CCMenuItemFont setFontSize:28];
-		
-		// to avoid a retain-cycle with the menuitem and blocks
-		__block id copy_self = self;
-		
-		// Achievement Menu Item using blocks
-		CCMenuItem *itemAchievement = [CCMenuItemFont itemWithString:@"Achievements" block:^(id sender) {
-			
-			
-			GKAchievementViewController *achivementViewController = [[GKAchievementViewController alloc] init];
-			achivementViewController.achievementDelegate = copy_self;
-			
-			AppController *app = (AppController*) [[UIApplication sharedApplication] delegate];
-			
-			[[app navController] presentModalViewController:achivementViewController animated:YES];
-			
-			[achivementViewController release];
-		}];
-		
-		// Leaderboard Menu Item using blocks
-		CCMenuItem *itemLeaderboard = [CCMenuItemFont itemWithString:@"Leaderboard" block:^(id sender) {
-			
-			
-			GKLeaderboardViewController *leaderboardViewController = [[GKLeaderboardViewController alloc] init];
-			leaderboardViewController.leaderboardDelegate = copy_self;
-			
-			AppController *app = (AppController*) [[UIApplication sharedApplication] delegate];
-			
-			[[app navController] presentModalViewController:leaderboardViewController animated:YES];
-			
-			[leaderboardViewController release];
-		}];
-
-		
-		CCMenu *menu = [CCMenu menuWithItems:itemAchievement, itemLeaderboard, nil];
-		
-		[menu alignItemsHorizontallyWithPadding:20];
-		[menu setPosition:ccp( size.width/2, size.height/2 - 50)];
-		
-		// Add the menu to the layer
-		[self addChild:menu];
-
-	}
+        //游戏主视图
+        
+        CCSprite * bg = [CCSprite spriteWithFile:@"Game.jpg"];
+        bg.position=CGPointMake(SCREEN_SIZE.width/2, SCREEN_SIZE.height/2);
+        [self addChild:bg];
+        _main = [[CCLayer alloc]init];
+        _main.contentSize=SCREEN_SIZE;
+        _main.position=CGPointZero;
+        [_main addChild:[GameLayer scene]];
+        //左视图
+        _left = [[LeftLayer alloc]init];
+        _left.position = CGPointMake(-_left.contentSize.width, 0);
+        [self addChild:_left];
+        [self addChild:_main];
+    }
 	return self;
 }
 
 // on "dealloc" you need to release all your retained objects
 - (void) dealloc
 {
+    CCLOG(@"dealloc:%@",[self class]);
 	// in case you have something to dealloc, do it in this method
 	// in this particular example nothing needs to be released.
 	// cocos2d will automatically release all the children (Label)
-	
+    [_left release];
+    [_main release];
 	// don't forget to call "super dealloc"
 	[super dealloc];
 }
